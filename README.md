@@ -318,7 +318,7 @@ MIT License - feel free to use this project for your own blog!
 ## 💡 Next Steps
 
 - [x] Add authentication system
-- [x] Implement comment moderation
+- [ ] Implement comment moderation
 - [x] Add image upload functionality
 - [x] Create admin dashboard
 - [x] Add search functionality

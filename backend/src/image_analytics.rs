@@ -1,9 +1,4 @@
-use axum::{
-    extract::State,
-    http::StatusCode,
-    response::IntoResponse,
-    Json,
-};
+use axum::{Json, extract::State, http::StatusCode, response::IntoResponse};
 use serde::Serialize;
 use std::sync::Arc;
 
@@ -54,14 +49,9 @@ pub struct RecentUpload {
     pub variants_count: i64,
 }
 
-pub async fn get_analytics(
-    State(state): State<Arc<AppState>>,
-) -> impl IntoResponse {
+pub async fn get_analytics(State(state): State<Arc<AppState>>) -> impl IntoResponse {
     match generate_analytics(state).await {
-        Ok(analytics) => (
-            StatusCode::OK,
-            Json(ApiResponse::success(analytics)),
-        ),
+        Ok(analytics) => (StatusCode::OK, Json(ApiResponse::success(analytics))),
         Err(e) => (
             StatusCode::INTERNAL_SERVER_ERROR,
             Json(ApiResponse::<ImageAnalytics>::error(e)),
@@ -74,34 +64,41 @@ async fn generate_analytics(state: Arc<AppState>) -> Result<ImageAnalytics, Stri
     let conn = pool.connection().await.map_err(|e| e.to_string())?;
 
     // Total images and size
-    let mut rows = conn.query(
-        "SELECT COUNT(*), COALESCE(SUM(size), 0) FROM images WHERE variant = 'original'",
-        libsql::params![],
-    ).await.map_err(|e| e.to_string())?;
+    let mut rows = conn
+        .query(
+            "SELECT COUNT(*), COALESCE(SUM(size), 0) FROM images WHERE variant = 'original'",
+            libsql::params![],
+        )
+        .await
+        .map_err(|e| e.to_string())?;
 
-    let (total_images, total_size_bytes) = if let Some(row) = rows.next().await.map_err(|e| e.to_string())? {
-        let count: i64 = row.get(0).map_err(|e| e.to_string())?;
-        let size: i64 = row.get(1).map_err(|e| e.to_string())?;
-        (count, size)
-    } else {
-        (0, 0)
-    };
+    let (total_images, total_size_bytes) =
+        if let Some(row) = rows.next().await.map_err(|e| e.to_string())? {
+            let count: i64 = row.get(0).map_err(|e| e.to_string())?;
+            let size: i64 = row.get(1).map_err(|e| e.to_string())?;
+            (count, size)
+        } else {
+            (0, 0)
+        };
 
     // Stats by variant
-    let mut rows = conn.query(
-        "SELECT variant, COUNT(*), COALESCE(SUM(size), 0) 
+    let mut rows = conn
+        .query(
+            "SELECT variant, COUNT(*), COALESCE(SUM(size), 0) 
          FROM images 
          GROUP BY variant 
          ORDER BY variant",
-        libsql::params![],
-    ).await.map_err(|e| e.to_string())?;
+            libsql::params![],
+        )
+        .await
+        .map_err(|e| e.to_string())?;
 
     let mut by_variant = Vec::new();
     while let Some(row) = rows.next().await.map_err(|e| e.to_string())? {
         let variant: String = row.get(0).map_err(|e| e.to_string())?;
         let count: i64 = row.get(1).map_err(|e| e.to_string())?;
         let size_bytes: i64 = row.get(2).map_err(|e| e.to_string())?;
-        
+
         by_variant.push(VariantStats {
             variant,
             count,
@@ -112,17 +109,46 @@ async fn generate_analytics(state: Arc<AppState>) -> Result<ImageAnalytics, Stri
 
     // Orphaned images (not referenced in any posts)
     // For now, just return empty - would need to check posts table
-    let orphaned_images = Vec::new();
+    // let orphaned_images = Vec::new();
+    // Find images not referenced in any post
+    let mut rows = conn
+        .query(
+            "SELECT i.id, i.filename, i.size, i.created_at
+     FROM images i
+     WHERE i.variant = 'original'
+     AND i.id NOT IN (
+         SELECT DISTINCT featured_image 
+         FROM posts 
+         WHERE featured_image IS NOT NULL
+     )
+     ORDER BY i.created_at DESC",
+            libsql::params![],
+        )
+        .await
+        .map_err(|e| e.to_string())?;
+
+    let mut orphaned_images = Vec::new();
+    while let Some(row) = rows.next().await.map_err(|e| e.to_string())? {
+        orphaned_images.push(OrphanedImage {
+            id: row.get(0).map_err(|e| e.to_string())?,
+            filename: row.get(1).map_err(|e| e.to_string())?,
+            size_bytes: row.get(2).map_err(|e| e.to_string())?,
+            created_at: row.get(3).map_err(|e| e.to_string())?,
+        });
+    }
 
     // Largest images
-    let mut rows = conn.query(
-        "SELECT id, filename, size, variant 
+    let mut rows = conn
+        .query(
+            "SELECT id, filename, size, variant 
          FROM images 
          WHERE variant = 'original'
          ORDER BY size DESC 
          LIMIT 10",
-        libsql::params![],
-    ).await.map_err(|e| e.to_string())?;
+            libsql::params![],
+        )
+        .await
+        .map_err(|e| e.to_string())?;
 
     let mut largest_images = Vec::new();
     while let Some(row) = rows.next().await.map_err(|e| e.to_string())? {
@@ -130,7 +156,7 @@ async fn generate_analytics(state: Arc<AppState>) -> Result<ImageAnalytics, Stri
         let filename: String = row.get(1).map_err(|e| e.to_string())?;
         let size_bytes: i64 = row.get(2).map_err(|e| e.to_string())?;
         let variant: String = row.get(3).map_err(|e| e.to_string())?;
-        
+
         largest_images.push(LargeImage {
             id,
             filename,
@@ -141,15 +167,18 @@ async fn generate_analytics(state: Arc<AppState>) -> Result<ImageAnalytics, Stri
     }
 
     // Recent uploads
-    let mut rows = conn.query(
-        "SELECT i.id, i.filename, i.size, i.created_at,
+    let mut rows = conn
+        .query(
+            "SELECT i.id, i.filename, i.size, i.created_at,
                 (SELECT COUNT(*) FROM images WHERE parent_id = i.id) as variants_count
          FROM images i
          WHERE i.variant = 'original'
          ORDER BY i.created_at DESC
          LIMIT 10",
-        libsql::params![],
-    ).await.map_err(|e| e.to_string())?;
+            libsql::params![],
+        )
+        .await
+        .map_err(|e| e.to_string())?;
 
     let mut recent_uploads = Vec::new();
     while let Some(row) = rows.next().await.map_err(|e| e.to_string())? {

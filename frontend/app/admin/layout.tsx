@@ -62,33 +62,39 @@ export default function AdminLayout({
         <aside className="w-64 bg-gray-900 text-white min-h-screen">
           <div className="p-6">
             <nav className="space-y-2">
-              <Link 
-                href="/admin" 
+              <Link
+                href="/admin"
                 className="block px-4 py-2 rounded hover:bg-gray-800 transition-colors"
               >
                 📊 Dashboard
               </Link>
-              <Link 
-                href="/admin/posts" 
+              <Link
+                href="/admin/posts"
                 className="block px-4 py-2 rounded hover:bg-gray-800 transition-colors"
               >
                 📝 Posts
               </Link>
-              <Link 
-                href="/admin/posts/new" 
+              {/* <Link
+                href="/admin/comments"
+                className="block px-4 py-2 rounded hover:bg-gray-800"
+              >
+                💬 Comments
+              </Link> */}
+              <Link
+                href="/admin/posts/new"
                 className="block px-4 py-2 rounded hover:bg-gray-800 transition-colors"
               >
                 ➕ New Post
               </Link>
-              <Link 
-                href="/admin/images" 
+              <Link
+                href="/admin/images"
                 className="block px-4 py-2 rounded hover:bg-gray-800 transition-colors"
               >
                 🖼️ Images
               </Link>
               <div className="pt-4 mt-4 border-t border-gray-700">
-                <Link 
-                  href="/" 
+                <Link
+                  href="/"
                   className="block px-4 py-2 rounded hover:bg-gray-800 transition-colors"
                 >
                   🏠 View Site

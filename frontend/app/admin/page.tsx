@@ -1,10 +1,10 @@
-import { fetchPosts } from '@/lib/api'
+import { fetchPostsAll } from '@/lib/api'
 import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
 
 export default async function AdminDashboard() {
-  const posts = await fetchPosts(100, 0)
+  const posts = await fetchPostsAll(100, 0)
   
   const totalPosts = posts.length
   const publishedPosts = posts.filter(p => p.status === 'published').length

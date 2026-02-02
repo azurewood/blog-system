@@ -98,8 +98,8 @@ export default function ImageAnalytics() {
             <div>
               <p className="text-purple-100 text-sm font-medium">Avg Size</p>
               <p className="text-3xl font-bold mt-2">
-                {analytics.total_images > 0 
-                  ? (analytics.total_size_mb / analytics.total_images).toFixed(1) 
+                {analytics.total_images > 0
+                  ? (analytics.total_size_mb / analytics.total_images).toFixed(1)
                   : 0} MB
               </p>
             </div>
@@ -220,6 +220,32 @@ export default function ImageAnalytics() {
             )}
           </div>
         </div>
+
+        {analytics.orphaned_images.length > 0 && (
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mt-6">
+            <h3 className="text-lg font-semibold text-yellow-900 mb-4">
+              ⚠️ Orphaned Images ({analytics.orphaned_images.length})
+            </h3>
+            <p className="text-sm text-yellow-700 mb-4">
+              These images aren't used in any posts
+            </p>
+            <div className="space-y-2">
+              {analytics.orphaned_images.slice(0, 10).map(img => (
+                <div key={img.id} className="flex justify-between items-center bg-white p-3 rounded">
+                  <span className="text-sm">{img.filename}</span>
+                  <span className="text-sm text-gray-500">
+                    {(img.size_bytes / 1024 / 1024).toFixed(2)} MB
+                  </span>
+                </div>
+              ))}
+            </div>
+            {analytics.orphaned_images.length > 10 && (
+              <p className="text-sm text-gray-500 mt-2">
+                + {analytics.orphaned_images.length - 10} more
+              </p>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Refresh Button */}
