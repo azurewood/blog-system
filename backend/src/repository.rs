@@ -215,12 +215,41 @@ impl PostRepository {
             .ok_or_else(|| "Post not found after update".to_string())
     }
 
+    // pub async fn delete(&self, id: &str) -> Result<(), String> {
+    //     let conn = self.pool.connection().await.map_err(|e| e.to_string())?;
+
+    //     conn.execute("DELETE FROM posts WHERE id = ?1", params![id])
+    //         .await
+    //         .map_err(|e| e.to_string())?;
+
+    //     Ok(())
+    // }
+
     pub async fn delete(&self, id: &str) -> Result<(), String> {
         let conn = self.pool.connection().await.map_err(|e| e.to_string())?;
 
-        conn.execute("DELETE FROM posts WHERE id = ?1", params![id])
+        // Manually delete in correct order
+
+        // 1. Delete comments
+        conn.execute(
+            "DELETE FROM comments WHERE post_id = ?",
+            libsql::params![id],
+        )
+        .await
+        .map_err(|e| format!("Failed to delete comments: {}", e))?;
+
+        // 2. Delete post-tag relationships
+        conn.execute(
+            "DELETE FROM post_tags WHERE post_id = ?",
+            libsql::params![id],
+        )
+        .await
+        .map_err(|e| format!("Failed to delete post tags: {}", e))?;
+
+        // 3. Delete the post itself
+        conn.execute("DELETE FROM posts WHERE id = ?", libsql::params![id])
             .await
-            .map_err(|e| e.to_string())?;
+            .map_err(|e| format!("Failed to delete post: {}", e))?;
 
         Ok(())
     }

@@ -1,5 +1,6 @@
 import { fetchPostsAll } from '@/lib/api'
 import Link from 'next/link'
+import DeletePostButton from '@/components/DeletePostButton'
 
 export const dynamic = 'force-dynamic'
 
@@ -91,6 +92,11 @@ export default async function AdminPostsPage() {
                     >
                       View
                     </Link>
+                    <DeletePostButton
+                      postId={post.id}
+                      postTitle={post.title}
+                      variant="text"
+                    />
                   </td>
                 </tr>
               ))}

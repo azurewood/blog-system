@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description: 'A modern blog built with Next.js and Rust',
   alternates: {
     types: {
-      'application/rss+xml': 'http://localhost:3000/feed.xml',
+      'application/rss+xml': (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001') + '/feed.xml',
     },
   },
 }
@@ -31,27 +31,27 @@ export default function RootLayout({
                 </Link>
                 <div className="flex items-center gap-6">
                   <SearchBar />
-                  <Link 
-                    href="/" 
+                  <Link
+                    href="/"
                     className="text-gray-600 hover:text-gray-900 font-medium transition-colors"
                   >
                     Home
                   </Link>
-                  <Link 
-                    href="/about" 
+                  <Link
+                    href="/about"
                     className="text-gray-600 hover:text-gray-900 font-medium transition-colors"
                   >
                     About
                   </Link>
-                  <a 
-                    href="http://localhost:3000/feed.xml" 
+                  <a
+                    href={(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001') + "/feed.xml"}
                     className="text-gray-600 hover:text-gray-900 font-medium transition-colors flex items-center gap-1"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M5 3a1 1 0 000 2c5.523 0 10 4.477 10 10a1 1 0 102 0C17 8.373 11.627 3 5 3z"/>
-                      <path d="M4 9a1 1 0 011-1 7 7 0 017 7 1 1 0 11-2 0 5 5 0 00-5-5 1 1 0 01-1-1zM3 15a2 2 0 114 0 2 2 0 01-4 0z"/>
+                      <path d="M5 3a1 1 0 000 2c5.523 0 10 4.477 10 10a1 1 0 102 0C17 8.373 11.627 3 5 3z" />
+                      <path d="M4 9a1 1 0 011-1 7 7 0 017 7 1 1 0 11-2 0 5 5 0 00-5-5 1 1 0 01-1-1zM3 15a2 2 0 114 0 2 2 0 01-4 0z" />
                     </svg>
                     RSS
                   </a>
