@@ -23,11 +23,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Create default admin user
     println!("Creating default admin user...");
-    let password_hash = bcrypt::hash("password123", bcrypt::DEFAULT_COST)?;
+    let password_hash = bcrypt::hash(env::var("PASSWORD").as_deref().unwrap_or("password123"), bcrypt::DEFAULT_COST)?;
     
     match user_repo.create_user(
-        "admin@example.com",
-        "admin",
+        env::var("EMAIL").as_deref().unwrap_or("admin@example.com"), //admin@example.com",
+        env::var("ADMIN").as_deref().unwrap_or("admin"), //"admin",
         &password_hash,
         Some("Admin User".to_string()),
         UserRole::Admin,
@@ -36,7 +36,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             println!("✓ Admin user created successfully!");
             println!("  Email: {}", user.email);
             println!("  Username: {}", user.username);
-            println!("  Password: password123");
+            println!("  Password: {}", env::var("PASSWORD").as_deref().unwrap_or("password123"));
             println!("\nYou can now login at http://localhost:3001/login");
         }
         Err(e) => {

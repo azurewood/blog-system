@@ -18,6 +18,22 @@ export async function fetchPosts(limit = 10, offset = 0): Promise<Post[]> {
   return result.data || [];
 }
 
+export async function fetchPostsAll(limit = 10, offset = 0): Promise<Post[]> {
+  const response = await fetch(
+    `${API_URL}/api/posts_all?limit=${limit}&offset=${offset}`,
+    {
+      next: { revalidate: 60 }, // Revalidate every 60 seconds
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch posts');
+  }
+
+  const result: ApiResponse<Post[]> = await response.json();
+  return result.data || [];
+}
+
 export async function fetchPostBySlug(slug: string): Promise<Post | null> {
   const response = await fetch(`${API_URL}/api/posts/by-slug/${slug}`, {
     next: { revalidate: 60 },

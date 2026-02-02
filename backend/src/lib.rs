@@ -71,9 +71,10 @@ pub async fn create_app(database_url: &str, auth_token: Option<String>) -> Resul
         // Posts
         .route("/api/posts", get(handlers::list_posts).post(handlers::create_post))
         .route("/api/posts/by-slug/{slug}", get(handlers::get_post))
-        .route("/api/posts/{id}", put(handlers::update_post).delete(handlers::delete_post))
+        .route("/api/posts/{id}", get(handlers::get_post_by_id).put(handlers::update_post).delete(handlers::delete_post))
         .route("/api/search", get(handlers::search_posts))
-        
+        .route("/api/posts_all", get(handlers::list_posts_all))
+
         // Comments
         .route("/api/posts/{post_id}/comments", 
             get(comment_handlers::get_comments).post(comment_handlers::create_comment))

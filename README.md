@@ -108,7 +108,7 @@ cargo build
 cargo run
 ```
 
-The backend will start on `http://localhost:3000`
+The backend will start on `http://localhost:3001`
 
 ### 3. Frontend Setup
 
@@ -122,13 +122,13 @@ npm install
 cp .env.local.example .env.local
 
 # Edit .env.local:
-# NEXT_PUBLIC_API_URL=http://localhost:3000
+# NEXT_PUBLIC_API_URL=http://localhost:3001
 
 # Run the development server
 npm run dev
 ```
 
-The frontend will start on `http://localhost:3001`
+The frontend will start on `http://localhost:3000`
 
 ## 🌐 API Endpoints
 
@@ -152,7 +152,7 @@ The frontend will start on `http://localhost:3001`
 
 **Create a post:**
 ```bash
-curl -X POST http://localhost:3000/api/posts \
+curl -X POST http://localhost:3001/api/posts \
   -H "Content-Type: application/json" \
   -d '{
     "title": "My First Post",
@@ -166,12 +166,12 @@ curl -X POST http://localhost:3000/api/posts \
 
 **Get all posts:**
 ```bash
-curl http://localhost:3000/api/posts
+curl http://localhost:3001/api/posts
 ```
 
 **Get a specific post:**
 ```bash
-curl http://localhost:3000/api/posts/by-slug/my-first-post
+curl http://localhost:3001/api/posts/by-slug/my-first-post
 ```
 
 ## 🚢 Deployment to Vercel
@@ -302,7 +302,7 @@ MIT License - feel free to use this project for your own blog!
 
 ### Backend won't start
 - Check Turso credentials in `.env`
-- Ensure port 3000 is available
+- Ensure port 3001 is available
 - Run `cargo clean` and rebuild
 
 ### Frontend can't connect to backend
@@ -317,13 +317,13 @@ MIT License - feel free to use this project for your own blog!
 
 ## 💡 Next Steps
 
-- [ ] Add authentication system
-- [ ] Implement comment moderation
-- [ ] Add image upload functionality
-- [ ] Create admin dashboard
-- [ ] Add search functionality
-- [ ] Implement RSS feed
-- [ ] Add social sharing buttons
+- [x] Add authentication system
+- [x] Implement comment moderation
+- [x] Add image upload functionality
+- [x] Create admin dashboard
+- [x] Add search functionality
+- [x] Implement RSS feed
+- [x] Add social sharing buttons
 - [ ] Set up email notifications
 
 ---

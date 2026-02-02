@@ -1,10 +1,10 @@
-import { fetchPosts } from '@/lib/api'
+import { fetchPostsAll } from '@/lib/api'
 import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
 
 export default async function AdminPostsPage() {
-  const posts = await fetchPosts(100, 0)
+  const posts = await fetchPostsAll(100, 0)
 
   return (
     <div>
@@ -13,7 +13,7 @@ export default async function AdminPostsPage() {
           <h1 className="text-3xl font-bold text-gray-900 mb-2">All Posts</h1>
           <p className="text-gray-600">Manage your blog posts</p>
         </div>
-        <Link 
+        <Link
           href="/admin/posts/new"
           className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
         >
@@ -49,8 +49,8 @@ export default async function AdminPostsPage() {
                   <td className="px-6 py-4">
                     <div className="flex items-start">
                       {post.featured_image && (
-                        <img 
-                          src={post.featured_image} 
+                        <img
+                          src={post.featured_image}
                           alt={post.title}
                           className="w-16 h-16 object-cover rounded mr-4"
                         />
@@ -62,13 +62,12 @@ export default async function AdminPostsPage() {
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      post.status === 'published' 
-                        ? 'bg-green-100 text-green-800' 
-                        : post.status === 'draft'
+                    <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${post.status === 'published'
+                      ? 'bg-green-100 text-green-800'
+                      : post.status === 'draft'
                         ? 'bg-yellow-100 text-yellow-800'
                         : 'bg-gray-100 text-gray-800'
-                    }`}>
+                      }`}>
                       {post.status}
                     </span>
                   </td>
@@ -79,13 +78,13 @@ export default async function AdminPostsPage() {
                     {new Date(post.created_at).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4 text-sm space-x-3">
-                    <Link 
+                    <Link
                       href={`/admin/posts/${post.id}/edit`}
                       className="text-blue-600 hover:text-blue-900 font-medium"
                     >
                       Edit
                     </Link>
-                    <Link 
+                    <Link
                       href={`/blog/${post.slug}`}
                       className="text-gray-600 hover:text-gray-900 font-medium"
                       target="_blank"
@@ -104,7 +103,7 @@ export default async function AdminPostsPage() {
             <div className="text-6xl mb-4">📝</div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">No posts yet</h3>
             <p className="text-gray-500 mb-6">Get started by creating your first blog post!</p>
-            <Link 
+            <Link
               href="/admin/posts/new"
               className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
             >

@@ -76,6 +76,23 @@ pub async fn list_posts(
     }
 }
 
+// GET /api/posts_all - List published posts
+pub async fn list_posts_all(
+    State(state): State<Arc<AppState>>,
+    Query(pagination): Query<PaginationQuery>,
+) -> impl IntoResponse {
+    match state.post_repo.list_all(pagination.limit, pagination.offset).await {
+        Ok(posts) => (
+            StatusCode::OK,
+            Json(ApiResponse::success(posts)),
+        ),
+        Err(e) => (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            Json(ApiResponse::<Vec<Post>>::error(e)),
+        ),
+    }
+}
+
 // GET /api/posts/:slug - Get single post by slug
 pub async fn get_post(
     State(state): State<Arc<AppState>>,
@@ -190,4 +207,26 @@ pub struct SearchQuery {
 // Health check endpoint
 pub async fn health_check() -> impl IntoResponse {
     (StatusCode::OK, Json(ApiResponse::success("OK")))
+}
+
+
+// New handler
+pub async fn get_post_by_id(
+    State(state): State<Arc<AppState>>,
+    Path(id): Path<String>,
+) -> impl IntoResponse {
+    match state.post_repo.get_by_id(&id).await {
+        Ok(Some(post)) => (
+            StatusCode::OK,
+            Json(ApiResponse::success(post))
+        ),
+        Ok(None) => (
+            StatusCode::NOT_FOUND,
+            Json(ApiResponse::<Post>::error("Post not found".to_string())),
+        ),
+        Err(e) => (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            Json(ApiResponse::<Post>::error(e)),
+        ),
+    }
 }
