@@ -21,6 +21,11 @@ interface Analytics {
     created_at: number
     variants_count: number
   }[]
+  orphaned_images: {
+    id: string
+    filename: string
+    size_bytes: number
+  }[]
 }
 
 export default function ImageAnalytics() {
