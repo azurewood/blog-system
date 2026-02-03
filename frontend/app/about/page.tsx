@@ -55,9 +55,14 @@ export default function AboutPage() {
         </h2>
 
         <p className="text-gray-600">
-          Have questions or feedback? We'd love to hear from you! Reach out to us at{' '}
-          <a href="mailto:hello@example.com" className="text-blue-600 hover:text-blue-700">
-            hello@example.com
+          Have questions or feedback? We'd love to hear from you! Reach out to us on our{' '}
+          <a
+            href="https://github.com/azurewood/blog-system"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:text-blue-700 font-medium"
+          >
+            GitHub Repository
           </a>
         </p>
       </div>
