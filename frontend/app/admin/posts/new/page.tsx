@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createPost } from '@/lib/api'
 import ImageUpload from '@/components/ImageUpload'
+import MarkdownEditor from '@/components/MarkdownEditor'
 
 export default function NewPostPage() {
   const router = useRouter()
@@ -68,22 +69,20 @@ export default function NewPostPage() {
               <button
                 type="button"
                 onClick={() => setShowPreview(false)}
-                className={`px-4 py-2 rounded-lg font-medium ${
-                  !showPreview 
-                    ? 'bg-blue-100 text-blue-700' 
+                className={`px-4 py-2 rounded-lg font-medium ${!showPreview
+                    ? 'bg-blue-100 text-blue-700'
                     : 'text-gray-600 hover:bg-gray-100'
-                }`}
+                  }`}
               >
                 Edit
               </button>
               <button
                 type="button"
                 onClick={() => setShowPreview(true)}
-                className={`px-4 py-2 rounded-lg font-medium ${
-                  showPreview 
-                    ? 'bg-blue-100 text-blue-700' 
+                className={`px-4 py-2 rounded-lg font-medium ${showPreview
+                    ? 'bg-blue-100 text-blue-700'
                     : 'text-gray-600 hover:bg-gray-100'
-                }`}
+                  }`}
               >
                 Preview
               </button>
@@ -168,12 +167,17 @@ export default function NewPostPage() {
                 />
               </div>
 
-              {/* Content */}
+              {/* Content with Markdown Editor */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Content (Markdown) *
                 </label>
-                <textarea
+                <MarkdownEditor
+                  value={formData.content}
+                  onChange={(content) => setFormData(prev => ({ ...prev, content }))}
+                  placeholder="Write your post content in markdown..."
+                />
+                {/* <textarea
                   value={formData.content}
                   onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
@@ -189,7 +193,7 @@ Write your content here using **Markdown** formatting...
 
 [Link text](https://example.com)"
                   required
-                />
+                /> */}
                 <p className="mt-2 text-sm text-gray-500">
                   Supports Markdown formatting. Use # for headings, ** for bold, * for italic, etc.
                 </p>
@@ -198,8 +202,8 @@ Write your content here using **Markdown** formatting...
           ) : (
             <div className="prose prose-lg max-w-none">
               {formData.featured_image && (
-                <img 
-                  src={formData.featured_image} 
+                <img
+                  src={formData.featured_image}
                   alt={formData.title}
                   className="w-full rounded-lg mb-8"
                 />

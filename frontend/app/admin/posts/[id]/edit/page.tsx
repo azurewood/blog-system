@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import ImageUpload from '@/components/ImageUpload'
+import MarkdownEditor from '@/components/MarkdownEditor'
 
 export default function EditPostPage() {
   const params = useParams()
@@ -38,13 +39,13 @@ export default function EditPostPage() {
     try {
       const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
       const response = await fetch(`${API_URL}/api/posts/${params.id}`)
-      
+
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`)
       }
 
       const data = await response.json()
-      
+
       if (data.success && data.data) {
         const post = data.data
         setFormData({
@@ -71,7 +72,7 @@ export default function EditPostPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!token) {
       alert('Not authenticated. Please login again.')
       router.push('/login')
@@ -82,7 +83,7 @@ export default function EditPostPage() {
 
     try {
       const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
-      
+
       // Prepare data
       const postData = {
         title: formData.title,
@@ -111,7 +112,7 @@ export default function EditPostPage() {
       }
 
       const data = await response.json()
-      
+
       if (data.success) {
         alert('Post updated successfully!')
         router.push('/admin/posts')
@@ -223,19 +224,24 @@ export default function EditPostPage() {
             />
           </div>
 
-          {/* Content */}
+          {/* Content with Markdown Editor */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Content (Markdown) *
             </label>
-            <textarea
+            <MarkdownEditor
+              value={formData.content}
+              onChange={(content) => setFormData(prev => ({ ...prev, content }))}
+              placeholder="Write your post content in markdown..."
+            />
+            {/* <textarea
               value={formData.content}
               onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
               rows={20}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
               required
               placeholder="Write your post content in markdown..."
-            />
+            /> */}
           </div>
 
           {/* Tags */}
