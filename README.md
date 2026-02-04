@@ -450,82 +450,82 @@ console.log("Hello");
 > Blockquote
 
 
-    ### Image Management
+### Image Management
 
-    **Upload Images:**
-    1. Go to Admin → Images
-    2. Drag & drop files or click to select
-    3. Upload up to 20 images at once
-    4. Automatic optimization creates 5 variants
+**Upload Images:**
+1. Go to Admin → Images
+2. Drag & drop files or click to select
+3. Upload up to 20 images at once
+4. Automatic optimization creates 5 variants
 
-    **Search & Filter:**
-    - Filter by filename
-    - Filter by date range
-    - Filter by file size
-    - Filter by variant type
+**Search & Filter:**
+- Filter by filename
+- Filter by date range
+- Filter by file size
+- Filter by variant type
 
-    **Batch Operations:**
-    - Select multiple images
-    - Copy URLs to clipboard
-    - Delete multiple at once
+**Batch Operations:**
+- Select multiple images
+- Copy URLs to clipboard
+- Delete multiple at once
 
-    **Analytics:**
-    - Total storage used
-    - Number of images
-    - Largest files
-    - Recent uploads
-    - Orphaned images (not used in posts)
+**Analytics:**
+- Total storage used
+- Number of images
+- Largest files
+- Recent uploads
+- Orphaned images (not used in posts)
 
-    ### Comment Moderation
+### Comment Moderation
 
-    **Enable comments** on blog posts, then:
+**Enable comments** on blog posts, then:
 
-    1. Go to Admin → Comments
-    2. View pending comments
-    3. Approve or delete
-    4. Approved comments appear on posts
+1. Go to Admin → Comments
+2. View pending comments
+3. Approve or delete
+4. Approved comments appear on posts
 
-    ### Deleting Posts
+### Deleting Posts
 
-    **From Posts List:**
-    1. Click "Delete" next to any post
-    2. Confirm deletion in modal
-    3. Post and all comments are deleted (CASCADE)
+**From Posts List:**
+1. Click "Delete" next to any post
+2. Confirm deletion in modal
+3. Post and all comments are deleted (CASCADE)
 
-    **What Gets Deleted:**
-    - The post itself
-    - All comments on the post
-    - Post-tag relationships
-    - (Featured image remains in gallery)
+**What Gets Deleted:**
+- The post itself
+- All comments on the post
+- Post-tag relationships
+- (Featured image remains in gallery)
 
-    ---
+---
 
-    ## 🔌 API Documentation
+## 🔌 API Documentation
 
-    ### Authentication
+### Authentication
 
-    **Login**
-    ```http
-    POST /api/auth/login
-    Content-Type: application/json
+**Login**
+```http
+POST /api/auth/login
+Content-Type: application/json
 
-    {
+{
+  "email": "admin@example.com",
+  "password": "password123"
+}
+
+Response:
+{
+  "success": true,
+  "data": {
+    "token": "eyJhbGci...",
+    "user": {
+      "id": "...",
       "email": "admin@example.com",
-      "password": "password123"
+      "role": "admin"
     }
-
-    Response:
-    {
-      "success": true,
-      "data": {
-        "token": "eyJhbGci...",
-        "user": {
-          "id": "...",
-          "email": "admin@example.com",
-          "role": "admin"
-        }
-      }
-    }
+  }
+}
 
 ### Posts
 
