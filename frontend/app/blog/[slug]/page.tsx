@@ -1,7 +1,8 @@
 import { notFound } from 'next/navigation'
 import { format } from 'date-fns'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
+// import ReactMarkdown from 'react-markdown'
+// import remarkGfm from 'remark-gfm'
+import MarkdownPreview from '@/components/MarkdownPreview'
 import { fetchPostBySlug } from '@/lib/api'
 import ShareButtons from '@/components/ShareButtons'
 import Comments from '@/components/Comments'
@@ -88,9 +89,10 @@ export default async function BlogPostPage({ params }: PageProps) {
       </header>
 
       <div className="prose prose-lg max-w-none">
-        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+        {/* <ReactMarkdown remarkPlugins={[remarkGfm]}>
           {post.content}
-        </ReactMarkdown>
+        </ReactMarkdown> */}
+        <MarkdownPreview content={post.content} />
       </div>
 
       <div className="mt-8 pt-8 border-t border-gray-200">
