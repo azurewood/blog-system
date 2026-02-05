@@ -10,6 +10,10 @@ import anchor from 'markdown-it-anchor'
 import toc from 'markdown-it-table-of-contents'
 import container from 'markdown-it-container'
 import footnote from 'markdown-it-footnote'
+import { imgSize, obsidianImgSize } from "@mdit/plugin-img-size"
+import { sup } from "@mdit/plugin-sup"
+import { sub } from "@mdit/plugin-sub"
+
 
 interface MarkdownPreviewProps {
     content: string
@@ -64,9 +68,9 @@ export default function MarkdownPreview({ content, className = '' }: MarkdownPre
         // Add emoji plugin
         md.use(emoji)
             .use(anchor, {
-                permalink: true,
-                permalinkBefore: true,
-                permalinkSymbol: '#'
+                permalink: false,
+                // permalinkBefore: true,
+                // permalinkSymbol: '#'
             })
             .use(toc, {
                 includeLevel: [1, 2, 3],
@@ -76,6 +80,10 @@ export default function MarkdownPreview({ content, className = '' }: MarkdownPre
             .use(container, 'info')
             .use(container, 'tip')
             .use(footnote)
+            .use(imgSize)
+            .use(obsidianImgSize)
+            .use(sub)
+            .use(sup)
 
         // Custom link rendering to open in new tab
         const defaultRender = md.renderer.rules.link_open || function (tokens, idx, options, env, self) {
