@@ -13,6 +13,9 @@ import footnote from 'markdown-it-footnote'
 import { imgSize, obsidianImgSize } from "@mdit/plugin-img-size"
 import { sup } from "@mdit/plugin-sup"
 import { sub } from "@mdit/plugin-sub"
+import { ins } from '@mdit/plugin-ins'
+import { mark } from '@mdit/plugin-mark'
+import { tasklist } from "@mdit/plugin-tasklist"
 
 
 interface MarkdownPreviewProps {
@@ -84,6 +87,9 @@ export default function MarkdownPreview({ content, className = '' }: MarkdownPre
             .use(obsidianImgSize)
             .use(sub)
             .use(sup)
+            .use(ins)
+            .use(mark)
+            .use(tasklist)
 
         // Custom link rendering to open in new tab
         const defaultRender = md.renderer.rules.link_open || function (tokens, idx, options, env, self) {
