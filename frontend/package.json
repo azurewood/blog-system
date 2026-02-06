@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@mdit/plugin-abbr": "^0.22.2",
     "@mdit/plugin-dl": "^0.22.3",
     "@mdit/plugin-img-size": "^0.22.5",
     "@mdit/plugin-ins": "^0.22.2",

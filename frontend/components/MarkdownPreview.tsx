@@ -17,6 +17,7 @@ import { ins } from '@mdit/plugin-ins'
 import { mark } from '@mdit/plugin-mark'
 import { tasklist } from "@mdit/plugin-tasklist"
 import { dl } from "@mdit/plugin-dl"
+import { abbr } from "@mdit/plugin-abbr"
 
 
 interface MarkdownPreviewProps {
@@ -92,6 +93,7 @@ export default function MarkdownPreview({ content, className = '' }: MarkdownPre
             .use(mark)
             .use(tasklist)
             .use(dl)
+            .use(abbr)
 
         // Custom link rendering to open in new tab
         const defaultRender = md.renderer.rules.link_open || function (tokens, idx, options, env, self) {
